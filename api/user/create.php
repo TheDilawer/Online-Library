@@ -29,20 +29,7 @@
 
     $user_arr=array();
 
-    // Get input data
-//    $data = json_decode(file_get_contents("php://input"));
-//    $data=$data->data;
-
-//
-//    $user->userName=$data->username;
-//    $user->password=$data->password;
-//    $user->role=$data->role;
-//    $user->active=$data->active;
-//    $user->hash=getToken(32);
-
-
-
-
+    //Get User input
     $user->userName=isset($_GET['username']) ? $_GET['username'] : '';
     $user->password=isset($_GET['password']) ? $_GET['password'] : '';
     $user->role=1;

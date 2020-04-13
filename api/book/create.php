@@ -1,15 +1,15 @@
 <?php
-
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
     // get database connection
     include_once '../config/database.php';
 
-    // instantiate user object
+    // instantiate user and book object
+    include_once '../objects/book.php';
     include_once '../objects/user.php';
 
-    // instantiate user object
+    // Get Funtions
     include '../functions.php';
 
     //JWT
@@ -20,42 +20,38 @@
 
     use \Firebase\JWT\JWT;
 
-
-// adjust headers
+    // adjust headers
     header("Access-Control-Allow-Origin: * ");
     header("Content-Type: application/json; charset=UTF-8");
     header("Access-Control-Allow-Methods: GET");
     header("Access-Control-Max-Age: 3600");
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-
     // Get Database Connection
     $database = new Database();
     $db = $database->getConnection();
 
-    //Define Variables to Use
-    $id ='';
-    $username ='';
-    $role='';
     $jwt='';
-    $secret_key = '';
+
+    // Create Object
+    $book=new Book($db);
+
 
 
 
     //Read Header
     foreach (getallheaders() as $name => $value) {
-     if($name=="JWT")
+        if($name=="JWT")
         {
-          $jwt=$value;
+            $jwt=$value;
         }
     }
 
-
-
-
-
     if($jwt)
     {
+        // Get User Inputs
+        $book->name=isset($_GET['name']) ? $_GET['name'] : '';
+        $book->isbnNo=isset($_GET['isbnNo']) ? $_GET['isbnNo'] : '';
 
         // Read JWT Payload
         $unDecodedJWT=getJwtPayload($jwt);
@@ -74,71 +70,50 @@
         $userSecret=$row['token'];
         $userRole=$row['role'];
 
+        $response_arr=array();
+
         //TODO
         //Check user role form db and token role data
 
-
-
-      if($userRole==2031)
-      {
         try {
 
-          $decoded = JWT::decode($jwt, $userSecret, array('HS256'));
+            $decoded = JWT::decode($jwt, $userSecret, array('HS256'));
 
-          // Access is granted. Add code of the operation here
+            // Access is granted. Add code of the operation here
 
-          // Create User Array
-          $user_arr=array();
-          $user_arr["user"]=array();
-
-
-          // Read All Users
-          $stmt=$user->read();
-
-          //Get the row count
-          $num = $stmt->rowCount();
+            //Owner id
+            $book->ownerId=$user->id;
 
 
-          if($num>0)
-          {
-            while($row = $stmt->fetch(PDO::FETCH_ASSOC))
+            if($book->create())
             {
-              extract($row);
-              $user_item=array(
-                "id" => $id,
-                "username" => $username,
-                "role"=> $role,
+                $response_arr=array(
+                    "status"=>true,
+                    "message"=>"Book created successfully.",
+                    "BookId"=>$book->id,
+                    "isbnNo"=>$book->isbnNo,
+                );
 
-              );
-              array_push($user_arr["user"], $user_item);
             }
-            echo json_encode($user_arr["user"],JSON_PRETTY_PRINT);
-          }
-          else
-          {
-            echo json_encode(array("message"=>"Hiç Kullanıcı Bulunamadı."));
-          }
-
+            else
+            {
+                $response_arr=array(
+                    "status"=>false,
+                    "message"=>"There is a problem no book created."
+                );
+            }
+            echo json_encode($response_arr);
 
         }
         catch (Exception $e)
         {
 
-          http_response_code(401);
-          echo json_encode(array("message"=>"Erişim reddedildi."));
+            http_response_code(401);
+            echo json_encode(array("message"=>"Erişim reddedildi."));
         }
-      }
-      else
-      {
-        echo json_encode(array("message"=>"Kullanıcının buraya erişme yetkisi bulunmamaktadır."));
-
-      }
-      }
+    }
     else
     {
-      echo json_encode(array("message"=>"No token No data."));
+        echo json_encode(array("message"=>"No token No data."));
     }
-
-
-
 
