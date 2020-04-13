@@ -22,7 +22,7 @@ class User
     public $token;
 
     //
-    //Roles : 1 - WebUser
+    //Roles : 1 - User
     //Roles : 2031 - Admin
 
 
@@ -41,6 +41,7 @@ class User
     public function create()
     {
 
+      //First Check For Duplicated Email
       if($this->checkMail())
       {
         $query='INSERT INTO '.$this->table_name.' (username,password,role,hash,active,register_date) VALUES (:userName,:password,:role,:hash,:active,:registerDate) ';
