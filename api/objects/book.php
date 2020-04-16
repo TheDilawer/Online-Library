@@ -65,6 +65,20 @@ class Book
 
     public function readAll()
     {
+        $query='SELECT * FROM '.$this->table_name.' WHERE ownerid=:ownerId ';
+
+        // Prepare Query
+        $stmt=$this->conn->prepare($query);
+
+
+
+        $stmt->bindParam(":ownerId", $this->ownerId);
+
+        //Execute Query
+        $stmt->execute();
+
+        //Return Result
+        return $stmt;
 
     }
 
@@ -72,6 +86,7 @@ class Book
 
     public function read()
     {
+
 
     }
 

@@ -65,6 +65,7 @@ $user_arr='';
 
          echo json_encode(
            array(
+              "status"=>"success",
              "message" => "Successful login.",
              "jwt" => $jwt,
              "username" =>  $row['username'],
@@ -81,7 +82,11 @@ $user_arr='';
            }
          }
          // set JWT cookies
-         setcookie("JWT", $jwt, time()+60*15, null, "lamabilsim.com/library", 1, 1);
+//           setcookie("JWT", $jwt, time() + (86400 * 30), "/");
+         setcookie("JWT", $jwt, time()+60*15*15, '/', '/', 1, 1);
+
+//         $who=time()+60*15;
+//           header ("Set-Cookie: JWT=$jwt; expires=$who;path=/; /");
        }
        else
        {
