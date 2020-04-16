@@ -82,11 +82,10 @@ $user_arr='';
            }
          }
          // set JWT cookies
-//           setcookie("JWT", $jwt, time() + (86400 * 30), "/");
+           http_response_code(200);
          setcookie("JWT", $jwt, time()+60*15*15, '/', '/', 1, 1);
 
-//         $who=time()+60*15;
-//           header ("Set-Cookie: JWT=$jwt; expires=$who;path=/; /");
+
        }
        else
        {
@@ -94,6 +93,7 @@ $user_arr='';
            "status"=>"error",
            "message" => "Hatalı yada eksik şifre.",
          );
+           http_response_code(200);
          print_r(json_encode($user_arr,JSON_UNESCAPED_UNICODE));
 
        }
@@ -106,16 +106,8 @@ $user_arr='';
             "status"=>"error",
             "message" => "Sistemde Kayıtlı Böyle Bir Kullanıcı Bulunamadı.",
         );
+        http_response_code(200);
         print_r(json_encode($user_arr,JSON_UNESCAPED_UNICODE));
     }
 
-//    $user_arr=array(
-//        "status"=>"error",
-//        "message" => "Invalid or empty token",
-//
-//    );
 
-
-// make it json format
-
-//print_r(json_encode($user_arr,JSON_UNESCAPED_UNICODE));
