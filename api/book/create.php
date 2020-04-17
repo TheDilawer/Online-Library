@@ -39,13 +39,9 @@
 
 
 
-    //Read Header
-    foreach (getallheaders() as $name => $value) {
-        if($name=="JWT")
-        {
-            $jwt=$value;
-        }
-    }
+    //Read Cookie
+
+    $jwt=$_COOKIE['JWT'];
 
     if($jwt)
     {
@@ -88,7 +84,7 @@
             if($book->create())
             {
                 $response_arr=array(
-                    "status"=>true,
+                    "status"=>"success",
                     "message"=>"Book created successfully.",
                     "BookId"=>$book->id,
                     "isbnNo"=>$book->isbnNo,
@@ -98,7 +94,7 @@
             else
             {
                 $response_arr=array(
-                    "status"=>false,
+                    "status"=>"fail",
                     "message"=>"There is a problem no book created."
                 );
             }
