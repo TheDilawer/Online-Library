@@ -51,6 +51,26 @@ class Book
 
     public function update()
     {
+        $query='UPDATE '.$this->table_name.' SET name=:name,isbnNo=:isbnNo WHERE ownerid=:ownerId AND id=:id';
+        $stmt=$this->conn->prepare($query);
+
+        $this->name=htmlspecialchars(strip_tags($this->name));
+        $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
+        $this->id=htmlspecialchars(strip_tags($this->id));
+
+        $stmt->bindParam(":name", $this->name);
+        $stmt->bindParam(":isbnNo", $this->isbnNo);
+        $stmt->bindParam(":ownerId", $this->ownerId);
+        $stmt->bindParam(":id", $this->id);
+
+        if($stmt->execute()){
+            $this->id = $this->conn->lastInsertId();
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 
     }
 
@@ -86,7 +106,20 @@ class Book
 
     public function read()
     {
+        $query='SELECT * FROM '.$this->table_name.' WHERE ownerid=:ownerId AND id=:bookId ';
 
+        // Prepare Query
+        $stmt=$this->conn->prepare($query);
+
+
+
+        $stmt->bindParam(":ownerId", $this->ownerId);
+        $stmt->bindParam(":bookId",$this->id);
+        //Execute Query
+        $stmt->execute();
+
+        //Return Result
+        return $stmt;
 
     }
 
