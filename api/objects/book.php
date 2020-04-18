@@ -12,6 +12,7 @@ class Book
     public $ownerId;
     public $name;
     public $isbnNo;
+    public $location;
 
     public function __construct($db)
     {
@@ -26,15 +27,17 @@ class Book
         //Check isbnNo for duplicate
 
 
-        $query='INSERT INTO '.$this->table_name.' (ownerid,name,isbnNo) VALUES (:ownerid,:name,:isbnNo) ';
+        $query='INSERT INTO '.$this->table_name.' (ownerid,name,isbnNo,location) VALUES (:ownerid,:name,:isbnNo,:location) ';
         $stmt=$this->conn->prepare($query);
 
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
+        $this->location=htmlspecialchars(strip_tags($this->location));
 
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":isbnNo", $this->isbnNo);
         $stmt->bindParam(":ownerid", $this->ownerId);
+        $stmt->bindParam(":location", $this->location);
 
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
@@ -51,17 +54,19 @@ class Book
 
     public function update()
     {
-        $query='UPDATE '.$this->table_name.' SET name=:name,isbnNo=:isbnNo WHERE ownerid=:ownerId AND id=:id';
+        $query='UPDATE '.$this->table_name.' SET name=:name,isbnNo=:isbnNo,location=:location WHERE ownerid=:ownerId AND id=:id';
         $stmt=$this->conn->prepare($query);
 
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
         $this->id=htmlspecialchars(strip_tags($this->id));
+        $this->location=htmlspecialchars(strip_tags($this->location));
 
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":isbnNo", $this->isbnNo);
         $stmt->bindParam(":ownerId", $this->ownerId);
         $stmt->bindParam(":id", $this->id);
+        $stmt->bindParam(":location", $this->location);
 
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();

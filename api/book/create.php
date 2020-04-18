@@ -48,6 +48,7 @@
         // Get User Inputs
         $book->name=isset($_GET['name']) ? $_GET['name'] : '';
         $book->isbnNo=isset($_GET['isbnNo']) ? $_GET['isbnNo'] : '';
+        $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
 
         // Read JWT Payload
         $unDecodedJWT=getJwtPayload($jwt);
