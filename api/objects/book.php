@@ -13,6 +13,7 @@ class Book
     public $name;
     public $isbnNo;
     public $location;
+    public $writer;
 
     public function __construct($db)
     {
@@ -34,10 +35,12 @@ class Book
         $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
         $this->location=htmlspecialchars(strip_tags($this->location));
 
+
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":isbnNo", $this->isbnNo);
         $stmt->bindParam(":ownerid", $this->ownerId);
         $stmt->bindParam(":location", $this->location);
+
 
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
@@ -61,6 +64,7 @@ class Book
         $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
         $this->id=htmlspecialchars(strip_tags($this->id));
         $this->location=htmlspecialchars(strip_tags($this->location));
+
 
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":isbnNo", $this->isbnNo);

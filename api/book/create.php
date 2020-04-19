@@ -8,6 +8,7 @@
     // instantiate user and book object
     include_once '../objects/book.php';
     include_once '../objects/user.php';
+    include_once '../objects/book_writer.php';
 
     // Get Funtions
     include '../functions.php';
@@ -35,6 +36,7 @@
 
     // Create Object
     $book=new Book($db);
+    $book_writer=new BookWriter($db);
 
 
 
@@ -49,6 +51,9 @@
         $book->name=isset($_GET['name']) ? $_GET['name'] : '';
         $book->isbnNo=isset($_GET['isbnNo']) ? $_GET['isbnNo'] : '';
         $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
+        $writerArray=isset($_GET['writerBox']) ?  $_GET["writerBox"] : '';
+
+
 
         // Read JWT Payload
         $unDecodedJWT=getJwtPayload($jwt);
@@ -84,6 +89,12 @@
 
             if($book->create())
             {
+                $book_writer->bookId=$book->id;
+                foreach ($writerArray as $writer)
+                {
+                    $book_writer->writerId=$writer;
+                    $book_writer->create();
+                }
                 $response_arr=array(
                     "status"=>"success",
                     "message"=>"Book created successfully.",
