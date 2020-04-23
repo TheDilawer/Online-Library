@@ -8,7 +8,7 @@
     // instantiate user and book object
     include_once '../objects/book.php';
     include_once '../objects/user.php';
-    include_once '../objects/book_writer.php';
+    include_once '../objects/bookwriter.php';
 
     // Get Funtions
     include '../functions.php';
@@ -48,10 +48,38 @@
     if($jwt)
     {
         // Get User Inputs
+        $book->number=isset($_GET['number']) ? $_GET['number'] : '';
         $book->name=isset($_GET['name']) ? $_GET['name'] : '';
-        $book->isbnNo=isset($_GET['isbnNo']) ? $_GET['isbnNo'] : '';
-        $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
+        $book->nameTitle=isset($_GET['nameTitle']) ? $_GET['nameTitle'] : '';
+
         $writerArray=isset($_GET['writerBox']) ?  $_GET["writerBox"] : '';
+
+        $book->publisher=isset($_GET['publisherBox']) ?  $_GET["publisherBox"] : '';
+        $book->publisherSeriesId=isset($_GET['publisherSeriesId']) ? $_GET['publisherSeriesId'] : '';
+        $book->publisherSeriesNo=isset($_GET['publisherSeriesNo']) ? $_GET['publisherSeriesNo'] : '';
+        $book->printingCount=isset($_GET['printingCount']) ? $_GET['printingCount'] : '';
+        $book->printingDate=isset($_GET['printingDate']) ? $_GET['printingDate'] : '';
+        $book->isbnNo=isset($_GET['isbnNo']) ? $_GET['isbnNo'] : '';
+        $book->originalName=isset($_GET['originalName']) ? $_GET['originalName'] : '';
+        $book->originalPublisher=isset($_GET['originalPublisher']) ? $_GET['originalPublisher'] : '';
+        $book->originalLang=isset($_GET['originalLang']) ? $_GET['originalLang'] : '';
+        $book->pageCount=isset($_GET['pageCount']) ? $_GET['pageCount'] : '';
+        $book->buyDate=isset($_GET['buyDate']) ? $_GET['buyDate'] : '';
+        $book->buyPrice=isset($_GET['buyPrice']) ? $_GET['buyPrice'] : '';
+        $book->star=isset($_GET['star']) ? $_GET['star'] : '';
+        $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
+        $book->category=isset($_GET['category']) ? $_GET['category'] : '';
+
+
+        $tempDate=$book->buyDate;
+        $date = strtotime($tempDate);
+        $book->buyDate= date("Y-m-d", $date);
+
+        $tempDate1=$book->printingDate;
+        $date2 = strtotime($tempDate1);
+        $book->printingDate= date("Y-m-d", $date2);
+
+
 
 
 
@@ -99,7 +127,7 @@
                     "status"=>"success",
                     "message"=>"Book created successfully.",
                     "BookId"=>$book->id,
-                    "isbnNo"=>$book->isbnNo,
+                    "isbnNo"=>$book->isbnNo
                 );
 
             }
