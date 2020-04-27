@@ -69,6 +69,7 @@
         $book->star=isset($_GET['star']) ? $_GET['star'] : '';
         $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
         $book->category=isset($_GET['category']) ? $_GET['category'] : '';
+        $book->publisherSeries=isset($_GET['publisherSeries']) ? $_GET['publisherSeries'] : '';
 
 
         $tempDate=$book->buyDate;

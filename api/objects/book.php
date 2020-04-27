@@ -29,6 +29,7 @@ class Book
     public $location;
     public $star;
     public $createDate;
+    public $publisherSeries;
 
 
 
@@ -48,10 +49,10 @@ class Book
         $query='INSERT INTO '.$this->table_name.' 
         (ownerid,name,isbnNo,location,publisher,number,nameTitle,publisherSeriesId,
         publisherSeriesNo,category,printingCount,printingDate,originalName,originalPublisher,
-        originalLang,pageCount,buyDate,buyPrice,star,createDate)
+        originalLang,pageCount,buyDate,buyPrice,star,createDate,publisherseries)
          VALUES (:ownerid,:name,:isbnNo,:location,:publisher,:number,:nameTitle,:publisherSeriesId,
         :publisherSeriesNo,:category,:printingCount,:printingDate,:originalName,:originalPublisher,
-        :originalLang,:pageCount,:buyDate,:buyPrice,:star,:createDate) ';
+        :originalLang,:pageCount,:buyDate,:buyPrice,:star,:createDate,:publisherSeries) ';
         $stmt=$this->conn->prepare($query);
 
         $this->createDate=date("Y-m-d H:i:s");
@@ -73,6 +74,7 @@ class Book
         $this->buyDate=htmlspecialchars(strip_tags($this->buyDate));
         $this->buyPrice=htmlspecialchars(strip_tags($this->buyPrice));
         $this->star=htmlspecialchars(strip_tags($this->star));
+        $this->publisherSeries=htmlspecialchars(strip_tags($this->publisherSeries));
 
 
 
@@ -96,6 +98,8 @@ class Book
         $stmt->bindParam(":buyPrice", $this->buyPrice);
         $stmt->bindParam(":star", $this->star);
         $stmt->bindParam(":createDate", $this->createDate);
+        $stmt->bindParam(":publisherSeries", $this->publisherSeries);
+
 
 
         if($stmt->execute()){
@@ -113,23 +117,68 @@ class Book
 
     public function update()
     {
-        $query='UPDATE '.$this->table_name.' SET name=:name,isbnNo=:isbnNo,location=:location,publisher=:publisher WHERE ownerid=:ownerId AND id=:id';
+        $query='UPDATE '.$this->table_name.' SET 
+        name=:name,
+        isbnNo=:isbnNo,
+        location=:location,
+        publisher=:publisher,
+        number=:number,
+        nameTitle=:nameTitle,
+        publisherSeriesId=:publisherSeriesId,
+        publisherSeriesNo=:publisherSeriesNo,
+        category=:category,
+        printingCount=:printingCount,
+        printingDate=:printingDate,
+        originalName=:originalName,
+        originalPublisher=:originalPublisher,
+        originalLang=:originalLang,
+        pageCount=:pageCount,
+        buyDate=:buyDate,
+        buyPrice=:buyPrice,
+        star=:star,
+        publisherseries=:publisherSeries
+        WHERE ownerid=:ownerId AND id=:id';
         $stmt=$this->conn->prepare($query);
 
         $this->name=htmlspecialchars(strip_tags($this->name));
         $this->isbnNo=htmlspecialchars(strip_tags($this->isbnNo));
-        $this->id=htmlspecialchars(strip_tags($this->id));
         $this->location=htmlspecialchars(strip_tags($this->location));
         $this->publisher=htmlspecialchars(strip_tags($this->publisher));
+        $this->number=htmlspecialchars(strip_tags($this->number));
+        $this->nameTitle=htmlspecialchars(strip_tags($this->nameTitle));
+        $this->publisherSeriesId=htmlspecialchars(strip_tags($this->publisherSeriesId));
+        $this->publisherSeriesNo=htmlspecialchars(strip_tags($this->publisherSeriesNo));
+        $this->category=htmlspecialchars(strip_tags($this->category));
+        $this->printingCount=htmlspecialchars(strip_tags($this->printingCount));
+        $this->printingDate=htmlspecialchars(strip_tags($this->printingDate));
+        $this->originalName=htmlspecialchars(strip_tags($this->originalName));
+        $this->originalPublisher=htmlspecialchars(strip_tags($this->originalPublisher));
+        $this->originalLang=htmlspecialchars(strip_tags($this->originalLang));
+        $this->buyDate=htmlspecialchars(strip_tags($this->buyDate));
+        $this->buyPrice=htmlspecialchars(strip_tags($this->buyPrice));
+        $this->star=htmlspecialchars(strip_tags($this->star));
 
-
+        $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":isbnNo", $this->isbnNo);
         $stmt->bindParam(":ownerId", $this->ownerId);
-        $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":location", $this->location);
         $stmt->bindParam(":publisher", $this->publisher);
-
+        $stmt->bindParam(":nameTitle", $this->nameTitle);
+        $stmt->bindParam(":number", $this->number);
+        $stmt->bindParam(":publisherSeriesId", $this->publisherSeriesId);
+        $stmt->bindParam(":publisherSeriesNo", $this->publisherSeriesNo);
+        $stmt->bindParam(":category", $this->category);
+        $stmt->bindParam(":printingCount", $this->printingCount);
+        $stmt->bindParam(":printingDate", $this->printingDate);
+        $stmt->bindParam(":originalName", $this->originalName);
+        $stmt->bindParam(":originalPublisher", $this->originalPublisher);
+        $stmt->bindParam(":originalLang", $this->originalLang);
+        $stmt->bindParam(":pageCount", $this->pageCount);
+        $stmt->bindParam(":buyDate", $this->buyDate);
+        $stmt->bindParam(":buyPrice", $this->buyPrice);
+        $stmt->bindParam(":star", $this->star);
+        $stmt->bindParam(":publisherSeries", $this->publisherSeries);
 
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();
@@ -183,6 +232,28 @@ class Book
 
         $stmt->bindParam(":ownerId", $this->ownerId);
         $stmt->bindParam(":bookId",$this->id);
+        //Execute Query
+        $stmt->execute();
+
+        //Return Result
+        return $stmt;
+
+    }
+
+    //Get Last Book Number
+    // Other then id every user can have own book number system
+    // If user want to index them differently we will give another id
+
+    public function getLastBookNumber()
+    {
+        $query='SELECT MAX(number) as number FROM '.$this->table_name.' WHERE ownerid=:ownerId ';
+
+        // Prepare Query
+        $stmt=$this->conn->prepare($query);
+
+
+
+        $stmt->bindParam(":ownerId", $this->ownerId);
         //Execute Query
         $stmt->execute();
 
