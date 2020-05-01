@@ -22,6 +22,7 @@ class Book
     public $isbnNo;
     public $originalName;
     public $originalPublisher;
+    public $translator;
     public $originalLang;
     public $pageCount;
     public $buyDate;
@@ -30,6 +31,7 @@ class Book
     public $star;
     public $createDate;
     public $publisherSeries;
+    public $firstPrintingDate;
 
 
 
@@ -49,10 +51,10 @@ class Book
         $query='INSERT INTO '.$this->table_name.' 
         (ownerid,name,isbnNo,location,publisher,number,nameTitle,publisherSeriesId,
         publisherSeriesNo,category,printingCount,printingDate,originalName,originalPublisher,
-        originalLang,pageCount,buyDate,buyPrice,star,createDate,publisherseries)
+        originalLang,pageCount,buyDate,buyPrice,star,createDate,publisherseries,translator,firstPrintingDate)
          VALUES (:ownerid,:name,:isbnNo,:location,:publisher,:number,:nameTitle,:publisherSeriesId,
         :publisherSeriesNo,:category,:printingCount,:printingDate,:originalName,:originalPublisher,
-        :originalLang,:pageCount,:buyDate,:buyPrice,:star,:createDate,:publisherSeries) ';
+        :originalLang,:pageCount,:buyDate,:buyPrice,:star,:createDate,:publisherSeries,:translator,:firstPrintingDate) ';
         $stmt=$this->conn->prepare($query);
 
         $this->createDate=date("Y-m-d H:i:s");
@@ -75,6 +77,8 @@ class Book
         $this->buyPrice=htmlspecialchars(strip_tags($this->buyPrice));
         $this->star=htmlspecialchars(strip_tags($this->star));
         $this->publisherSeries=htmlspecialchars(strip_tags($this->publisherSeries));
+        $this->translator=htmlspecialchars(strip_tags($this->translator));
+        $this->firstPrintingDate=htmlspecialchars(strip_tags($this->firstPrintingDate));
 
 
 
@@ -99,6 +103,8 @@ class Book
         $stmt->bindParam(":star", $this->star);
         $stmt->bindParam(":createDate", $this->createDate);
         $stmt->bindParam(":publisherSeries", $this->publisherSeries);
+        $stmt->bindParam(":translator", $this->translator);
+        $stmt->bindParam(":firstPrintingDate", $this->firstPrintingDate);
 
 
 
@@ -136,7 +142,9 @@ class Book
         buyDate=:buyDate,
         buyPrice=:buyPrice,
         star=:star,
-        publisherseries=:publisherSeries
+        publisherseries=:publisherSeries,
+        translator=:translator,
+        firstPrintingDate=:firstPrintingDate
         WHERE ownerid=:ownerId AND id=:id';
         $stmt=$this->conn->prepare($query);
 
@@ -157,6 +165,8 @@ class Book
         $this->buyDate=htmlspecialchars(strip_tags($this->buyDate));
         $this->buyPrice=htmlspecialchars(strip_tags($this->buyPrice));
         $this->star=htmlspecialchars(strip_tags($this->star));
+        $this->translator=htmlspecialchars(strip_tags($this->translator));
+        $this->firstPrintingDate=htmlspecialchars(strip_tags($this->firstPrintingDate));
 
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":name", $this->name);
@@ -179,6 +189,8 @@ class Book
         $stmt->bindParam(":buyPrice", $this->buyPrice);
         $stmt->bindParam(":star", $this->star);
         $stmt->bindParam(":publisherSeries", $this->publisherSeries);
+        $stmt->bindParam(":translator", $this->translator);
+        $stmt->bindParam(":firstPrintingDate", $this->firstPrintingDate);
 
         if($stmt->execute()){
             $this->id = $this->conn->lastInsertId();

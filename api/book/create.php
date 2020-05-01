@@ -9,6 +9,7 @@
     include_once '../objects/book.php';
     include_once '../objects/user.php';
     include_once '../objects/bookwriter.php';
+    include_once '../objects/booktranslator.php';
 
     // Get Funtions
     include '../functions.php';
@@ -37,6 +38,7 @@
     // Create Object
     $book=new Book($db);
     $book_writer=new BookWriter($db);
+    $book_translator=new BookTranslator($db);
 
 
 
@@ -53,6 +55,7 @@
         $book->nameTitle=isset($_GET['nameTitle']) ? $_GET['nameTitle'] : '';
 
         $writerArray=isset($_GET['writerBox']) ?  $_GET["writerBox"] : '';
+        $translatorArray=isset($_GET['translator']) ? $_GET['translator'] : '';
 
         $book->publisher=isset($_GET['publisherBox']) ?  $_GET["publisherBox"] : '';
         $book->publisherSeriesId=isset($_GET['publisherSeriesId']) ? $_GET['publisherSeriesId'] : '';
@@ -70,6 +73,8 @@
         $book->location=isset($_GET['locationBox']) ? $_GET['locationBox'] : '';
         $book->category=isset($_GET['category']) ? $_GET['category'] : '';
         $book->publisherSeries=isset($_GET['publisherSeries']) ? $_GET['publisherSeries'] : '';
+        $book->firstPrintingDate=isset($_GET['firstPrintingDate']) ? $_GET['firstPrintingDate'] : '';
+
 
 
         $tempDate=$book->buyDate;
@@ -80,6 +85,9 @@
         $date2 = strtotime($tempDate1);
         $book->printingDate= date("Y-m-d", $date2);
 
+        $tempDate2=$book->firstPrintingDate;
+        $date3 = strtotime($tempDate1);
+        $book->firstPrintingDate= date("Y-m-d", $date3);
 
 
 
@@ -119,10 +127,16 @@
             if($book->create())
             {
                 $book_writer->bookId=$book->id;
+                $book_translator->bookId=$book->id;
                 foreach ($writerArray as $writer)
                 {
                     $book_writer->writerId=$writer;
                     $book_writer->create();
+                }
+                foreach ($translatorArray as $translator)
+                {
+                    $book_translator->translatorId=$translator;
+                    $book_translator->create();
                 }
                 $response_arr=array(
                     "status"=>"success",
