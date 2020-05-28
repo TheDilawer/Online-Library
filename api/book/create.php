@@ -130,13 +130,20 @@
                 $book_translator->bookId=$book->id;
                 foreach ($writerArray as $writer)
                 {
-                    $book_writer->writerId=$writer;
-                    $book_writer->create();
+                    if($writer!=-1)
+                    {
+                        $book_writer->writerId=$writer;
+                        $book_writer->create();
+                    }
+
                 }
                 foreach ($translatorArray as $translator)
                 {
+                    if($translator!=-1)
+                    {
                     $book_translator->translatorId=$translator;
                     $book_translator->create();
+                    }
                 }
                 $response_arr=array(
                     "status"=>"success",

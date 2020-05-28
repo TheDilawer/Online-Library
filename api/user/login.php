@@ -83,7 +83,7 @@ $user_arr='';
          }
          // set JWT cookies
            http_response_code(200);
-         setcookie("JWT", $jwt, time()+60*15*15, '/', '/', 1, 1);
+         setcookie("JWT", $jwt, time()+60*15*15*8, '/', '/', 1, 1);
 
 
        }

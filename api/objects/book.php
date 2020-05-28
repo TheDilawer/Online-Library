@@ -274,6 +274,20 @@ class Book
 
     }
 
+    public function getBookCount()
+    {
+        $query='SELECT  COUNT(id) as bookCount FROM '.$this->table_name.' WHERE ownerid=:ownerId';
+        // Prepare Query
+        $stmt=$this->conn->prepare($query);
+
+        $stmt->bindParam(":ownerId", $this->ownerId);
+        //Execute Query
+        $stmt->execute();
+
+        //Return Result
+        return $stmt;
+    }
+
 
 
 }
